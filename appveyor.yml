@@ -1,0 +1,7 @@
+image: Ubuntu
+
+test_script:
+- which objdump
+- cat /proc/cpuinfo
+
+build: off
