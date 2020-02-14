@@ -1,7 +1,9 @@
 image: Ubuntu
 
 test_script:
-- which objdump
-- cat /proc/cpuinfo
+- |
+  cat /proc/cpuinfo | grep flags
+  gcc -O0 andn-asm.c
+  objdump -d a.out
 
 build: off
