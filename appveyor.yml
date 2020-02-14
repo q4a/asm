@@ -2,6 +2,7 @@ image: Ubuntu
 
 test_script:
 - |
+  gcc --version
   cat /proc/cpuinfo | grep flags
   gcc -O0 andn-asm.c
   objdump -d a.out
