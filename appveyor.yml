@@ -4,9 +4,11 @@ test_script:
 - |
   gcc --version
   cat /proc/cpuinfo | grep flags
-  gcc -O0 andn-asm.c
+  gcc -O0 -DNOBMI andn-asm.c
+  ./a.out
   objdump -d a.out
   gcc -mbmi -O3 andn-asm.c
+  ./a.out
   objdump -d a.out
 
 build: off
