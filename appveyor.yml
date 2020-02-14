@@ -5,5 +5,7 @@ test_script:
   cat /proc/cpuinfo | grep flags
   gcc -O0 andn-asm.c
   objdump -d a.out
+  gcc -O3 andn-asm.c
+  objdump -d a.out
 
 build: off
