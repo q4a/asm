@@ -8,6 +8,7 @@
 void posix_signal_handler(int sig, siginfo_t *siginfo, void *context)
 {
 	(void)context;
+	puts("st3");
 	switch(sig)
 	{
 		case SIGSEGV:
@@ -54,9 +55,9 @@ void posix_signal_handler(int sig, siginfo_t *siginfo, void *context)
 					fputs("Caught SIGILL: (illegal opcode)\n", stderr);
 					break;
 				case ILL_ILLOPN:
-					fputs("Caught SIGILL: (illegal operand)\n", stderr);
-					fputs("Check if it's MBI - replace it!\n", stderr);
-					break;
+					//fputs("Caught SIGILL: (illegal operand)\n", stderr);
+					puts("Check if it's MBI - replace it!\n");
+					_Exit(0);
 				case ILL_ILLADR:
 					fputs("Caught SIGILL: (illegal addressing mode)\n", stderr);
 					break;
@@ -89,24 +90,13 @@ void posix_signal_handler(int sig, siginfo_t *siginfo, void *context)
 		default:
 			break;
 	}
+	puts("st4");
 	_Exit(1);
 }
 
 static uint8_t alternate_stack[SIGSTKSZ];
 void set_signal_handler()
 {
-	/* setup alternate stack */
-	{
-		stack_t ss = {};
-		/* malloc is usually used here, I'm not 100% sure my static allocation
-		   is valid but it seems to work just fine. */
-		ss.ss_sp = (void*)alternate_stack;
-		ss.ss_size = SIGSTKSZ;
-		ss.ss_flags = 0;
-
-		if (sigaltstack(&ss, NULL) != 0) { err(1, "sigaltstack"); }
-	}
-
 	/* register our signal handlers */
 	{
 		struct sigaction sig_action = {};
@@ -124,7 +114,9 @@ void set_signal_handler()
 		if (sigaction(SIGSEGV, &sig_action, NULL) != 0) { err(1, "sigaction"); }
 		if (sigaction(SIGFPE,  &sig_action, NULL) != 0) { err(1, "sigaction"); }
 		if (sigaction(SIGINT,  &sig_action, NULL) != 0) { err(1, "sigaction"); }
+		puts("st1");
 		if (sigaction(SIGILL,  &sig_action, NULL) != 0) { err(1, "sigaction"); }
+		puts("st2");
 		if (sigaction(SIGTERM, &sig_action, NULL) != 0) { err(1, "sigaction"); }
 		if (sigaction(SIGABRT, &sig_action, NULL) != 0) { err(1, "sigaction"); }
 	}
@@ -132,7 +124,7 @@ void set_signal_handler()
 
 void mbi_andn(unsigned int a, unsigned int b)
 {
-	unsigned int c;
+	unsigned int c = 0;
 	printf("a=%d, b=%d\n", a, b);
 #ifdef NOBMI
 	c = ~a & b;
