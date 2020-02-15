@@ -2,13 +2,13 @@
 #include <x86intrin.h>
 
 int main(int argc, char* argv[]) {
-    unsigned int a = strtol(argv[1], NULL, 10), b = strtol(argv[2], NULL, 10), c;
+	unsigned int a = strtol(argv[1], NULL, 10), b = strtol(argv[2], NULL, 10), c;
+	printf("a=%d, b=%d\n", a, b);
 #ifdef NOBMI
-    printf("a=%d, b=%d\n", a, b);
-    c = ~a & b;
+	c = ~a & b;
 #else
-    c = __andn_u64(a, b);
+	c = __andn_u64(a, b);
 #endif
-    printf("__andn_u64(%d, %d)=%d\n", a, b, c);
-    return 1;
+	printf("__andn_u64(%d, %d)=%d\n", a, b, c);
+	return 1;
 }
